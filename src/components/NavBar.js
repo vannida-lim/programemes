@@ -1,12 +1,13 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+// import { Sticky } from 'semantic-ui-react';
 
 const NavBar = () => {
   return (
     <div>
-      <h1 className="header">Programemes</h1>
-      <div className="ui sticky"> 
-        <div className="ui top attached inverted teal menu">
+      {/* <Sticky> */}
+        <div className="ui top attached inverted blue menu">
+          <h1 id="programemes">Programemes</h1>
           <NavLink className="item" to="/"> Home </NavLink>
           <div className="right menu">
             <NavLink className="item" to="/submit"> Submit a Meme </NavLink>
@@ -15,7 +16,7 @@ const NavBar = () => {
             <NavLink className="item" to="/signup"> Signup </NavLink>
           </div>
         </div>
-      </div>
+      {/* </Sticky> */}
     </div>
   );
 }

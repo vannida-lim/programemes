@@ -5,12 +5,16 @@ import MemeList from './containers/MemeList.js'
 import NavBar from './components/NavBar.js'
 import NotFound from './containers/NotFound.js'
 import Form from './components/Form.js'
+import { Sticky } from 'semantic-ui-react'
+import Profile from './components/Profile.js'
 class App extends React.Component {
   state = {
-    memes: []
+    memes: [],
+    current_user: [],
+    liked: false
   }
 
-  componentDidMount(){
+  getMemes(){
     fetch('http://localhost:3000/memes')
     .then(r => r.json())
     .then((memesObj) => {
@@ -19,6 +23,21 @@ class App extends React.Component {
       })
     })
   }
+
+  componentDidMount(){
+    this.getMemes()
+
+    fetch('http://localhost:3000/users')
+    .then(r => r.json())
+    .then((usersObj) => {
+      this.setState({
+        current_user: usersObj[0]
+      })
+    })
+
+    
+  }
+  
 
   handleSubmit = (evt, newMeme) => {
     evt.preventDefault()
@@ -41,19 +60,55 @@ class App extends React.Component {
         memes: [newMeme, ...this.state.memes]
       })
     })
+    
+  }
+
+  handleLike = (meme) => {
+    fetch(`http://localhost:3000/memes/${meme.id}`, {
+      method:'PATCH',
+      headers: { 
+        'content-type': 'application/json',
+        'accept': 'application/json'
+      },
+      body: JSON.stringify({
+        liked: !this.state.liked
+      })
+    })
+    .then(r => r.json())
+    .then(likeObj => {
+      this.setState({
+        liked: likeObj.liked
+      })
+    })
+     
+  }
+
+  handleDelete = (meme) => {
+    fetch(`http://localhost:3000/memes/${meme.id}`, {
+      method:'DELETE',
+      headers: { 
+        'content-type': 'application/json',
+        'accept': 'application/json'
+      }
+    })
+    .then(r => r.json())
+    .then(memeObj => {
+      this.getMemes()
+    })
   }
   
-  
-  
-  
+
   render(){
     return (
       <Router>
         <div>
+          <Sticky>
           <NavBar/>
+          </Sticky>
           <Switch>
-            <Route exact path="/" render={() => <MemeList memes={this.state.memes}/>} />
+            <Route id="meme-container" exact path="/" render={() => <MemeList like={this.handleLike} memes={this.state.memes} liked={this.state.liked} delete={this.handleDelete}/>} />
             <Route path="/submit" render={() => <Form onSubmit={this.handleSubmit} />}/>
+            <Route path="/profile" render={() => <Profile current_user={this.state.current_user}/>}/>
             <Route component={ NotFound}/>
           </Switch>
         </div>

@@ -12,10 +12,12 @@ code {
     monospace;
 }
 
-.header {
-  padding: 10px;
+#programemes {
+  margin: 5px;
+  padding: 5px;
   font-family: 'Coda Caption', sans-serif;
-  font-size: 3em
+  font-size: 2em;
+  color: white; 
 }
 
 /* .menu {
@@ -25,3 +27,12 @@ code {
 .not-found {
   background-repeat: repeat-y
 }
+
+label {
+  position: relative;
+}
+
+#meme-card {
+  width: 600px;
+}
+
